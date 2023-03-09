@@ -22,4 +22,4 @@ Different images
   <img src="./screens/Снимок экрана 2023-03-09 в 23.45.24.png" width="300" />
 </p>
 
-# [APK : https://github.com/DamirNabiull/ChuckNorrisTinder/blob/main/app-release.apk](https://github.com/DamirNabiull/ChuckNorrisTinder/blob/main/app-release.apk)
+# [APK](https://github.com/AnnaDluzhinskaya/chuck_norris_tinder/blob/main/apk/app-release.apk)
