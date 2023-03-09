@@ -25,8 +25,10 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   void addCard() {
     if (items.length < 3) {
       for (int i = 0; i < 10; i++) {
-        items.insert(0, networkService
-            .getUserData(Uri.parse('https://api.chucknorris.io/jokes/random')));
+        items.insert(
+            0,
+            networkService.getUserData(
+                Uri.parse('https://api.chucknorris.io/jokes/random')));
         images.insert(0, getRandomImageName());
       }
     }
@@ -52,14 +54,15 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
         images.removeLast();
 
         _first = DragWidget(
-            user: items[items.length-1],
-            index: items.length-1,
+            user: items[items.length - 1],
+            index: items.length - 1,
             swipeNotifier: swipeNotifier,
-            imageName: images[images.length-1]);
-        _second = DragWidget(user: items[items.length-2],
-            index: items.length-2,
+            imageName: images[images.length - 1]);
+        _second = DragWidget(
+            user: items[items.length - 2],
+            index: items.length - 2,
             swipeNotifier: swipeNotifier,
-            imageName: images[images.length-2]);
+            imageName: images[images.length - 2]);
 
         _animationController.reset();
         swipeNotifier.value = Swipe.none;
@@ -73,14 +76,15 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   @override
   Widget build(BuildContext context) {
     _first = DragWidget(
-        user: items[items.length-1],
-        index: items.length-1,
+        user: items[items.length - 1],
+        index: items.length - 1,
         swipeNotifier: swipeNotifier,
-        imageName: images[images.length-1]);
-    _second = DragWidget(user: items[items.length-2],
-        index: items.length-2,
+        imageName: images[images.length - 1]);
+    _second = DragWidget(
+        user: items[items.length - 2],
+        index: items.length - 2,
         swipeNotifier: swipeNotifier,
-        imageName: images[images.length-2]);
+        imageName: images[images.length - 2]);
 
     return Stack(
       clipBehavior: Clip.none,
@@ -136,21 +140,20 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
                 ).animate(CurvedAnimation(
                     parent: _animationController, curve: Curves.easeInOut)),
                 child: RotationTransition(
-                  turns: Tween<double>(
-                          begin: 0,
-                          end: swipe != Swipe.none
-                              ? swipe == Swipe.left
-                                  ? -0.1 * 0.3
-                                  : 0.1 * 0.3
-                              : 0.0)
-                      .animate(
-                    CurvedAnimation(
-                      parent: _animationController,
-                      curve: const Interval(0, 0.4, curve: Curves.easeInOut),
+                    turns: Tween<double>(
+                            begin: 0,
+                            end: swipe != Swipe.none
+                                ? swipe == Swipe.left
+                                    ? -0.1 * 0.3
+                                    : 0.1 * 0.3
+                                : 0.0)
+                        .animate(
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: const Interval(0, 0.4, curve: Curves.easeInOut),
+                      ),
                     ),
-                  ),
-                  child: _first
-                ),
+                    child: _first),
               )
             ],
           ),
@@ -205,14 +208,15 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
             images.removeLast();
             addCard();
             _first = DragWidget(
-                user: items[items.length-1],
-                index: items.length-1,
+                user: items[items.length - 1],
+                index: items.length - 1,
                 swipeNotifier: swipeNotifier,
-                imageName: images[images.length-1]);
-            _second = DragWidget(user: items[items.length-2],
-                index: items.length-2,
+                imageName: images[images.length - 1]);
+            _second = DragWidget(
+                user: items[items.length - 2],
+                index: items.length - 2,
                 swipeNotifier: swipeNotifier,
-                imageName: images[images.length-2]);
+                imageName: images[images.length - 2]);
           });
         },
       );
