@@ -1,6 +1,8 @@
 import 'package:chuck_norris_tinder/model/user.dart';
 import 'package:chuck_norris_tinder/widget/drag_widget.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
+import '../services/network_service.dart';
 
 class CardsStackWidget extends StatefulWidget {
   const CardsStackWidget({super.key});
@@ -10,11 +12,22 @@ class CardsStackWidget extends StatefulWidget {
 }
 
 class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerProviderStateMixin {
-  final List<User> items = [User(description: "4 Test test test test"),
-    User(description: "3 Test test test test"), User(description: "2 Test test test test"), User(description: "1 Test test test test")
-  ];
+  final NetworkService networkService = NetworkService();
+  final List<Future<User>> items = [];
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
+  final _random = Random();
+
+  void addCard() {
+    items.insert(0, networkService.getUserData(Uri.parse('https://api.chucknorris.io/jokes/random')));
+  }
+
+  String getRandomImageName() {
+    int min = 1;
+    int max = 4;
+    int idx = min + _random.nextInt(max - min);
+    return 'assets/chuck_norris$idx.jpg';
+  }
 
   @override
   void initState() {
@@ -30,6 +43,9 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         swipeNotifier.value = Swipe.none;
       }
     });
+    // Add first card
+    addCard();
+    addCard();
   }
 
   @override
@@ -119,6 +135,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
                   index: index,
                   swipeNotifier: swipeNotifier,
                   isLastCard: true,
+                  imageName: getRandomImageName()
                 ),
               ),
             );
@@ -127,6 +144,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
               user: items[index],
               index: index,
               swipeNotifier: swipeNotifier,
+              imageName: getRandomImageName()
             );
           }
         }),
@@ -146,6 +164,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         onPressed: () {
           swipeNotifier.value = Swipe.left;
           _animationController.forward();
+          addCard();
         },
       ),
       ElevatedButton(
@@ -157,6 +176,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         onPressed: () {
           swipeNotifier.value = Swipe.right;
           _animationController.forward();
+          addCard();
         },
       )
     ],
@@ -179,6 +199,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
     onAccept: (int index) {
       setState(() {
         items.removeAt(index);
+        addCard();
       });
     },
   );

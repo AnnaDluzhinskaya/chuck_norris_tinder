@@ -42,8 +42,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final NetworkService networkService = NetworkService();
   final List<User> jokeCards = <User>[];
+
+
 
   @override
   Widget build(BuildContext context) => Container(

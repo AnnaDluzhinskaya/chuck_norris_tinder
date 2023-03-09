@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 enum Swipe { left, right, none }
 
 class DragWidget extends StatefulWidget {
-  final User user;
+  final Future<User> user;
   final int index;
   final ValueNotifier<Swipe> swipeNotifier;
   final bool isLastCard;
+  final String imageName;
 
   const DragWidget({
     super.key,
     required this.user,
     required this.index,
     required this.swipeNotifier,
-    this.isLastCard = false
+    this.isLastCard = false,
+    required this.imageName
   });
 
   @override
@@ -42,7 +44,7 @@ class _DragWidgetState extends State<DragWidget> {
                   : const AlwaysStoppedAnimation(0),
               child: Stack(
                 children: [
-                  JokeCard(user: widget.user),
+                  JokeCard(user: widget.user, imageName: widget.imageName),
                   swipe != Swipe.none
                       ? swipe == Swipe.right
                       ? Positioned(
@@ -86,7 +88,7 @@ class _DragWidgetState extends State<DragWidget> {
       childWhenDragging: Container(
         color: Colors.transparent,
       ),
-      child: JokeCard(user: widget.user),
+      child: JokeCard(user: widget.user, imageName: widget.imageName),
     ),
   );
 }
