@@ -14,12 +14,18 @@ class CardsStackWidget extends StatefulWidget {
 class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerProviderStateMixin {
   final NetworkService networkService = NetworkService();
   final List<Future<User>> items = [];
+  final List<String> images = [];
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
   final _random = Random();
 
   void addCard() {
-    items.insert(0, networkService.getUserData(Uri.parse('https://api.chucknorris.io/jokes/random')));
+    if (items.length < 3){
+      for (int i = 0; i < 10; i++) {
+        items.add(networkService.getUserData(Uri.parse('https://api.chucknorris.io/jokes/random')));
+        images.add(getRandomImageName());
+      }
+    }
   }
 
   String getRandomImageName() {
@@ -43,8 +49,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         swipeNotifier.value = Swipe.none;
       }
     });
-    // Add first card
-    addCard();
+    // Add cards
     addCard();
   }
 
@@ -135,7 +140,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
                   index: index,
                   swipeNotifier: swipeNotifier,
                   isLastCard: true,
-                  imageName: getRandomImageName()
+                  imageName: images[index]
                 ),
               ),
             );
@@ -144,7 +149,7 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
               user: items[index],
               index: index,
               swipeNotifier: swipeNotifier,
-              imageName: getRandomImageName()
+              imageName: images[index]
             );
           }
         }),
@@ -164,7 +169,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         onPressed: () {
           swipeNotifier.value = Swipe.left;
           _animationController.forward();
-          addCard();
         },
       ),
       ElevatedButton(
@@ -176,7 +180,6 @@ class _CardsStackWidgetState extends State<CardsStackWidget> with SingleTickerPr
         onPressed: () {
           swipeNotifier.value = Swipe.right;
           _animationController.forward();
-          addCard();
         },
       )
     ],
