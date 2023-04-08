@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:chuck_norris_tinder/model/user.dart';
+import 'package:localization/localization.dart';
 
 class JokeCard extends StatelessWidget {
   final Future<User> user;
@@ -40,11 +41,11 @@ class JokeCard extends StatelessWidget {
       );
 
   Widget buildName() => Row(
-        children: const [
+        children: [
           Text(
-            "Chuck Norris",
+            "name".i18n(),
             textAlign: TextAlign.left,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 32,
               color: Colors.white,
               fontWeight: FontWeight.bold,

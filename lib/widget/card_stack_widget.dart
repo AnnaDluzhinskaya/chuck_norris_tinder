@@ -1,33 +1,38 @@
+import 'dart:async';
 import 'package:chuck_norris_tinder/model/user.dart';
+import 'package:chuck_norris_tinder/services/services_assembly.dart';
 import 'package:chuck_norris_tinder/widget/drag_widget.dart';
+import 'package:chuck_norris_tinder/widget/favorite_jokes_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:localization/localization.dart';
 import 'dart:math';
-import '../services/network_service.dart';
 
-class CardsStackWidget extends StatefulWidget {
+class CardsStackWidget extends ConsumerStatefulWidget {
   const CardsStackWidget({super.key});
 
   @override
-  State<CardsStackWidget> createState() => _CardsStackWidgetState();
+  ConsumerState<CardsStackWidget> createState() => _CardsStackWidgetState();
 }
 
-class _CardsStackWidgetState extends State<CardsStackWidget>
+class _CardsStackWidgetState extends ConsumerState<CardsStackWidget>
     with SingleTickerProviderStateMixin {
-  final NetworkService networkService = NetworkService();
   final List<Future<User>> items = [];
   final List<String> images = [];
   late DragWidget _first;
   late DragWidget _second;
+
   ValueNotifier<Swipe> swipeNotifier = ValueNotifier(Swipe.none);
   late final AnimationController _animationController;
   final _random = Random();
+
 
   void addCard() {
     if (items.length < 3) {
       for (int i = 0; i < 10; i++) {
         items.insert(
             0,
-            networkService.getUserData(
+            ref.read(networkProvider).getUserData(
                 Uri.parse('https://api.chucknorris.io/jokes/random')));
         images.insert(0, getRandomImageName());
       }
@@ -44,10 +49,12 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         items.removeLast();
@@ -86,31 +93,65 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
         swipeNotifier: swipeNotifier,
         imageName: images[images.length - 2]);
 
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Positioned(top: 16, left: 0, right: 0, child: buildLogo()),
-        Positioned(top: 65, left: 0, right: 0, child: buildCards()),
-        Positioned(bottom: 26, left: 0, right: 0, child: buildButtons()),
-        Positioned(left: 0, child: buildDragTarget()),
-        Positioned(right: 0, child: buildDragTarget()),
-      ],
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.white, Colors.orangeAccent],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.5, 1])),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: buildAppBar(),
+        body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(top: 16, left: 0, right: 0, child: buildCards()),
+                  Positioned(
+                      bottom: 26, left: 0, right: 0, child: buildButtons()),
+                  Positioned(left: 0, child: buildDragTarget(false)),
+                  Positioned(right: 0, child: buildDragTarget(true)),
+                ],
+              )),
+        ),
+      ),
     );
   }
 
-  Widget buildLogo() => Row(
-        children: const [
-          Spacer(),
-          Text(
-            "Chuck Norris's Jokes",
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.orangeAccent,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Spacer()
+  PreferredSizeWidget buildAppBar() => AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: buildLogo(),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute<void>(
+                    builder: (BuildContext context) {
+                      return const FavoriteJokesListScreen();
+                    },
+                  ));
+                },
+                child: const Icon(
+                  Icons.favorite_rounded,
+                  size: 26.0,
+                  color: Colors.pinkAccent,
+                ),
+              ))
         ],
+      );
+
+  Widget buildLogo() => Text(
+        "main-title".i18n(),
+        style: const TextStyle(
+          fontSize: 30,
+          color: Colors.orangeAccent,
+          fontWeight: FontWeight.bold,
+        ),
       );
 
   Widget buildCards() => ClipRRect(
@@ -182,13 +223,14 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
             ),
             onPressed: () {
               swipeNotifier.value = Swipe.right;
+              ref.read(firestoreProvider).saveInfo(user: _first.user);
               _animationController.forward();
             },
           )
         ],
       );
 
-  Widget buildDragTarget() => DragTarget<int>(
+  Widget buildDragTarget(bool saveInfo) => DragTarget<int>(
         builder: (
           BuildContext context,
           List<dynamic> accepted,
@@ -207,6 +249,11 @@ class _CardsStackWidgetState extends State<CardsStackWidget>
             items.removeLast();
             images.removeLast();
             addCard();
+
+            if (saveInfo){
+              ref.read(firestoreProvider).saveInfo(user: _first.user);
+            }
+
             _first = DragWidget(
                 user: items[items.length - 1],
                 index: items.length - 1,
