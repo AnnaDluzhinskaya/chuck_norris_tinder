@@ -18,45 +18,32 @@ class FavoriteJokeCard extends StatelessWidget {
         width: MediaQuery.of(context).size.width - 32,
         child: Padding(
             padding:
-            const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             child: IntrinsicHeight(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width - 125,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildTitle(),
-                    const SizedBox(height: 6),
-                    buildDescription()
-                  ],
-                ),
-              )
-            )
-        )
-    );
+                child: SizedBox(
+              width: MediaQuery.of(context).size.width - 125,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildTitle(),
+                  const SizedBox(height: 6),
+                  buildDescription()
+                ],
+              ),
+            ))));
   }
 
   Widget buildTitle() {
-    return Text(
-      "name".i18n(),
-      style: const TextStyle(
-        color: Colors.black,
-          fontSize: 15.0,
-          fontWeight: FontWeight.w400
-      )
-    );
+    return Text("name".i18n(),
+        style: const TextStyle(
+            color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.w400));
   }
 
   Widget buildDescription() {
-    return Text(
-      info.description,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 5,
-      style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 12.0,
-          fontWeight: FontWeight.w400
-      )
-    );
+    return Text(info.description,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 5,
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12.0, fontWeight: FontWeight.w400));
   }
 }

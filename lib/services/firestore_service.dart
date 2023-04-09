@@ -15,8 +15,7 @@ class FirestoreService {
   }
 
   Stream<List<User>> getJokes() {
-    return _collection.snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => User.fromJson(doc.data()))
-        .toList());
+    return _collection.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
   }
 }

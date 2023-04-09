@@ -26,7 +26,6 @@ class _CardsStackWidgetState extends ConsumerState<CardsStackWidget>
   late final AnimationController _animationController;
   final _random = Random();
 
-
   void addCard() {
     if (items.length < 3) {
       for (int i = 0; i < 10; i++) {
@@ -250,7 +249,7 @@ class _CardsStackWidgetState extends ConsumerState<CardsStackWidget>
             images.removeLast();
             addCard();
 
-            if (saveInfo){
+            if (saveInfo) {
               ref.read(firestoreProvider).saveInfo(user: _first.user);
             }
 

@@ -15,12 +15,12 @@ class FavoriteJokesListScreen extends ConsumerWidget {
           backgroundColor: Colors.white,
           centerTitle: true,
           title: Text(
-              "favorite-jokes".i18n(),
-          style: const TextStyle(
-            color: Colors.orangeAccent,
-            fontSize: 25.0,
-            fontWeight: FontWeight.w700
-          ),),
+            "favorite-jokes".i18n(),
+            style: const TextStyle(
+                color: Colors.orangeAccent,
+                fontSize: 25.0,
+                fontWeight: FontWeight.w700),
+          ),
           iconTheme: const IconThemeData(
             color: Colors.orangeAccent,
           ),

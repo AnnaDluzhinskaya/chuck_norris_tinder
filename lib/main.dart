@@ -80,16 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return const CardsStackWidget();
   }
 
-  showDialogBox() =>
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
+  showDialogBox() => showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
             title: Text("alert-title".i18n()),
             content: Text("alert-description".i18n()),
             actions: [
@@ -97,15 +95,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     Navigator.pop(context, "Cancel");
                     setState(() => isAlertSet = false);
-                    isDeviceConnected = await InternetConnectionChecker().hasConnection;
+                    isDeviceConnected =
+                        await InternetConnectionChecker().hasConnection;
                     if (!isDeviceConnected) {
                       showDialogBox();
                       setState(() => isAlertSet = true);
                     }
                   },
-                  child: Text("alert-button".i18n())
-              )
+                  child: Text("alert-button".i18n()))
             ],
-          )
-      );
+          ));
 }
